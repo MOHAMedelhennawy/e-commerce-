@@ -65,11 +65,11 @@ Classes:
     * Methods: getName(), setName()
 
 - Inventory:
-    * Attributes: Map<products[Porduct], quantity>
+    * Attributes: Map<ProductID, { Product, Quantity }>
     * Methods: get(), add(), has(), checkAvialabilty(), updateStock()
 
 - Cart:
-    * Attributes: Map<productID, items[CartItem]>
+    * Attributes: Map<productID, CartItem>
     * Methods: getItem(), getItems(), addItem(), RemoveItem(), hasItem(), calculateTotalCost(), findItemByProductId(), increaseItemQuantity()
 
 - CartItem:
