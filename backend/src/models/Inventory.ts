@@ -1,3 +1,4 @@
+import { ERRORS } from "../constants/errors";
 import { Product } from "./Product.ts";
 
 export class Inventory {
@@ -8,17 +9,27 @@ export class Inventory {
     }
 
     add(product: Product, quantity: number) {
-        if (!product || !(product instanceof Product)) {
-            throw new Error("Missing Product");
+        if (!product) {
+            throw new Error(ERRORS.MISSING_PRODUCT);
         }
 
-        if (!quantity || quantity < 1) {
-            throw new Error("Missing quantity");
+        if (!(product instanceof Product)) {
+            throw new Error(ERRORS.INVALID_PRODUCT);
+        }
+
+        // Rejects NaN, Infinity, and -Infinity since they are not valid quantities
+        // typeof NaN === "number" => true, so you can't check useing typeof x === "number", because
+        // NaN value will accepted
+        if (!Number.isFinite(quantity)) {
+            throw new Error(ERRORS.INVALID_QUANTITY);
+        }
+
+        if (quantity < 0) {
+            throw new Error(ERRORS.QUANTITY_BELOW_ZERO);
         }
 
         const id = product.getId();
         const newQuantity: number = this.getQuantity(id) + quantity;
-
         this.products.set(id, { product, quantity: newQuantity });
     }
 
@@ -41,6 +52,7 @@ export class Inventory {
     }
 
     getQuantity(id: string): number {
+        this.checkId(id)
         return this.products.get(id)?.quantity ?? 0;
     }
 
@@ -51,7 +63,7 @@ export class Inventory {
 
     private updateQuantity(id: string, newQuantity: number) {
         if (newQuantity < 0)
-            throw new Error("Product quantity is missing");
+            throw new Error(ERRORS.INVALID_QUANTITY);
 
         const product = this.getProduct(id);
 
@@ -66,7 +78,7 @@ export class Inventory {
 
     private ensureProductExists(id: string) {
         if (!this.has(id))
-            throw new Error("Product not exist");
+            throw new Error(ERRORS.PRODUCT_NOT_FOUND);
     }
 
     private checkAvailability(id: string) {
@@ -74,12 +86,15 @@ export class Inventory {
         this.ensureProductExists(id);
 
         if (this.getQuantity(id) <= 0) {
-            throw new Error("Product out of stock");
+            throw new Error(ERRORS.PRODUCT_OUT_OF_STOCK);
         }
     }
 
     private checkId(id: string) {
-        if (typeof id !== "string" || id.trim() === "")
-            throw new Error("Missing ID");
+        if (typeof id !== "string")
+            throw new Error(ERRORS.INVALID_ID);
+
+        if (id.trim() === "")
+            throw new Error(ERRORS.MISSING_ID);
     }
 }

@@ -10,8 +10,8 @@ const inventory = new Inventory();
 
 initalizeInventory(inventory);
 
-const cart = new Cart();
-const user = new User("Mohammed", "Elhennawy@gmail.com", "234oi", cart);
+const user = new User("Mohammed", "Elhennawy@gmail.com", "234oi");
+const cart = user.getCart();
 console.log("User created and has a cart...");
 
 const cartService: CartService = new CartService(cart, inventory);

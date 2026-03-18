@@ -1,3 +1,4 @@
+import { ERRORS } from "../constants/errors.ts";
 import Auditable from "./Auditable.ts";
 import { CartItem } from "./CartItem.ts";
 import { Product } from "./Product.ts";
@@ -11,7 +12,7 @@ export class Cart extends Auditable{
     }
 
     /**
-     * Method to get item by product id
+     * Retrieves deep copy of cart item, to prevent external mutation of cart items.
      * 
      * @param id product id
      * @returns item Object if found, otherwise null
@@ -20,37 +21,43 @@ export class Cart extends Auditable{
         if(!this.hasItem(id))
             return null;
 
-        return this.items.get(id) ?? null;
+        return this.items.get(id)?.clone() ?? null;
     }
 
     /**
-     * Get deep copy of cart items, to prevent external mutation of cart items.
+     * Retrieves deep copy of cart items, to prevent external mutation of cart items.
      * 
      * @returns Array of all cart Items
      */
-    getItems(): CartItem[] {
+    getAllItems(): CartItem[] {
         return Array.from(this.items.values()).map(item => item.clone());
     }
 
     /**
-     * Method that add new item to user cart items
+     * Adds a product to the cart. If the product is already in the cart, increases its quantity by one.
      * 
-     * @param item New item that will added to user cart items
-     * @returns true if item added successfully, otherwise return false
+     * @param product The product to add to the cart.
+     * @returns true if the product was newly added, false if the quantity was increased.
+     * @throws Error if the product is missing or invalid.
      */
-    addItem(product: Product) {
-        if (!product || !(product instanceof Product)) {
-            throw new Error("Missing Product");
+    addItem(product: Product): boolean {
+        if (!product) {
+            throw new Error(ERRORS.MISSING_PRODUCT);
+        }
+
+        if (!(product instanceof Product)) {
+            throw new Error(ERRORS.INVALID_PRODUCT);
         }
 
         const id = product.getId();
+        const existingItem = this.items.get(id);
 
-        const item = this.getItem(id);
-
-        if (item) {
-            item.increaseQuantity();
+        if (existingItem) {
+            existingItem.increaseQuantity();
+            return false; // quantity increased
         } else {
             this.items.set(id, new CartItem(product));
+            return true; // product added
         }
     }
 
@@ -62,8 +69,10 @@ export class Cart extends Auditable{
      * @returns true if item removed or decreased successfully, otherwise false
      */
     removeItem(id: string): boolean {
+        this.checkId(id);
+
         if (!this.items.has(id)) {
-            return false;
+            throw new Error(ERRORS.PRODUCT_NOT_FOUND);
         }
 
         const item: CartItem | undefined = this.items.get(id);
@@ -88,9 +97,18 @@ export class Cart extends Auditable{
         return this.items.has(id);
     }
 
-    private checkId(id: string) {
-        if (typeof id !== "string" || id.trim() === "")
-            throw new Error("Missing ID");
+    /**
+     * Retrieves the cart item for the specified product id.
+     * 
+     * @param id - The id of the product.
+     * @returns The CartItem object if it exists, otherwise null.
+     */
+
+    private getItemInternal(id: string): CartItem | null {
+        if(!this.hasItem(id))
+            return null;
+
+        return this.items.get(id)?.clone() ?? null;
     }
 
     /**
