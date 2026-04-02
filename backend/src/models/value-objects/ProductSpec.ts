@@ -11,7 +11,7 @@ export class ProductSpec {
         return this.title;
     }
 
-    setTitle(title: string) {
+    setTitle(title: string): void {
         this.title = title;
     }
 
@@ -19,7 +19,7 @@ export class ProductSpec {
         return this.price;
     }
 
-    setPrice(price: number) {
+    setPrice(price: number): void {
         this.price = price;
     }
 }
