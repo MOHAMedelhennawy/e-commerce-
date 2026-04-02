@@ -1,27 +1,20 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ERRORS } from '../constants/errors';
+import { Id } from './value-objects/Id.js';
+import type { IEntity } from './interfaces/entity.interface.js';
 
-abstract class Entity {
-    private id: string;
+abstract class Entity implements IEntity {
+    private readonly _id: Id;
 
-    constructor(id?: string) {
-        this.id = id ? id : uuidv4();
+    constructor(id?: Id) {
+        this._id = id ?? new Id(uuidv4());
     }
 
-    getId(): string {
-        return this.id;
+    getId(): Id {
+        return this._id;
     }
 
-    sameId(id: string): boolean {
-        return this.id === id;
-    }
-
-    protected checkId(id: string) {
-        if (typeof id !== "string")
-            throw new Error(ERRORS.INVALID_ID);
-
-        if (id.trim() === "")
-            throw new Error(ERRORS.MISSING_ID);
+    protected equals(other: Entity): boolean {
+        return this._id.same(other._id);
     }
 }
 
