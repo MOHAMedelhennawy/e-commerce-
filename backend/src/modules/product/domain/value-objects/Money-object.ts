@@ -1,4 +1,4 @@
-import { ValidationError } from "../errors/domain.errors";
+import { ValidationError } from "../../../../shared/domain/errors/domain.errors";
 
 export default class Money {
     protected amount!: number;

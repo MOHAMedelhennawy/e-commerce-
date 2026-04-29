@@ -1,5 +1,5 @@
 import { ValidationError } from "../../../../shared/domain/errors/domain.errors.ts";
-import Money from "../../../../shared/domain/value-object/Money-object.ts";
+import Money from "../value-objects/Money-object.ts";
 
 export default class ProductSpec {
     private title!: string;

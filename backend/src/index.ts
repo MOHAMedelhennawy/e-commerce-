@@ -9,7 +9,15 @@ import ProductPersistencMapper from './modules/product/infrastructure/mappers/pr
 import ProductService from './modules/product/application/services/product.service';
 import ProductController from './modules/product/presentation/controllers/product.controller';
 import productRouter from './modules/product/presentation/routes/product.routes';
+import UserRepository from './modules/user/infrastructure/repositories/user.repository';
+import UserMapper from "./modules/user/infrastructure/mappers/user.mapper";
+import RegisterUserService from "./modules/user/application/services/register.user.service";
+import UserApplicationMapper from "./modules/user/application/mapper/user.mapper";
+import RegisterUserController from "./modules/user/presentation/controller/register.controller";
+import RegisterRouter from './modules/user/presentation/routes/register.routes';
+
 import { prisma } from './infrastructure/database/prisma';
+import BcryptPasswordHasher from './modules/user/infrastructure/security/bcrypt.password.hasher';
 
 const PORT = 4000;
 const app: Application = express();
@@ -33,11 +41,15 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 	next();
 });
 
-const repository = new ProductRepository(prisma.product, new ProductPersistencMapper());
-const service = new ProductService(repository)
-const controller = new ProductController(service)
+const productRepository = new ProductRepository(prisma.product, new ProductPersistencMapper());
+const productService = new ProductService(productRepository)
+const productController = new ProductController(productService)
+app.use("/api/v1/product", productRouter(productController));
 
-app.use("/api/v1/product", productRouter(controller));
+const userRepository = new UserRepository(prisma.users, new UserMapper());
+const registerService = new RegisterUserService(userRepository, new BcryptPasswordHasher(), new UserApplicationMapper());
+const registerController = new RegisterUserController(registerService);
+app.use("/api/v1/register", RegisterRouter(registerController));
 
 app.use(globalErrorHandler);
 
