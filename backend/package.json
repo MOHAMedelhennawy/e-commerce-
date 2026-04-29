@@ -4,19 +4,38 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
+    "dev": "tsx watch src/index.ts",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "seed:products": "tsx prisma/seed-products.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
     "commander": "^14.0.2",
-    "uuid": "^13.0.0"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "morgan": "^1.10.1",
+    "pg": "^8.20.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28",
+    "typescript": "^6.0.2",
+    "uuid": "^13.0.0",
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/pg": "^8.20.0",
     "jest": "^30.3.0",
-    "ts-jest": "^29.4.6"
+    "nodemon": "^3.1.14",
+    "prisma": "^7.7.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0"
   }
 }

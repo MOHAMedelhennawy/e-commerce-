@@ -7,22 +7,26 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "es2020",
+    "module": "ESNext",
+    "target": "ES2023",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
     // and npm install -D @types/node
-
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-
+    "moduleResolution": "bundler",
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0",
 
     // Style Options
     // "noImplicitReturns": true,
