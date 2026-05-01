@@ -1,5 +1,6 @@
+import ERROR from "../../../../shared/domain/errors/error.messages";
+import { USER_LIMITS } from "../../../../shared/domain/constants/domain.constants";
 import { ValidationError } from "../../../../shared/domain/errors/domain.errors";
-import ERROR from "../../../../shared/errors/error.messages";
 
 export default class Name {
     private constructor(private readonly fullName: string) {}
@@ -11,10 +12,10 @@ export default class Name {
     static create(fullName: string) {
         const len: number = fullName.length;
 
-        if (len < 2) {
+        if (len < USER_LIMITS.NAME.MIN) {
             throw new ValidationError(ERROR.USER.NAME.TOO_SHORT(len));
         }
-        if (len > 100) {
+        if (len > USER_LIMITS.NAME.MAX) {
             throw new ValidationError(ERROR.USER.NAME.TOO_LONG(len));
         }
 

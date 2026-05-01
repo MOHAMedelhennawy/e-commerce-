@@ -1,6 +1,6 @@
 import { validate as isValid, v4 as uuidv4 } from 'uuid';
 import { ValidationError } from "../errors/domain.errors";
-import ERROR from '../../errors/error.messages';
+import ERROR from '../errors/error.messages';
 
 export default class ID {
     private value: string

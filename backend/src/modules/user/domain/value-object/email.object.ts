@@ -1,5 +1,6 @@
+import ERROR from "../../../../shared/domain/errors/error.messages";
+import { USER_LIMITS } from "../../../../shared/domain/constants/domain.constants";
 import { ValidationError } from "../../../../shared/domain/errors/domain.errors";
-import ERROR from "../../../../shared/errors/error.messages";
 
 export default class Email {
     private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -9,10 +10,10 @@ export default class Email {
     static create(value: string): Email {
         const len = value.length;
 
-        if (len < 5) {
+        if (len < USER_LIMITS.EMAIL.MIN) {
             throw new ValidationError(ERROR.USER.EMAIL.TOO_SHORT(len));
         }
-        if (len > 255) {
+        if (len > USER_LIMITS.EMAIL.MAX) {
             throw new ValidationError(ERROR.USER.EMAIL.TOO_LONG(len));
         }
         if (!Email.EMAIL_REGEX.test(value)) {

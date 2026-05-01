@@ -1,11 +1,7 @@
-import * as z from "zod";
+interface CreateProductInputDTO {
+    title: string,
+    price: number,
+    stock: number,
+}
 
-const CreateProductRequestSchema = z.object({
-    title: z.string().nonempty({message: "Title is required"}),
-    stock: z.number({ message: "Stock must be a number" }),
-    price: z.number({ message: "Price must be a number" }),
-})
-
-export type CreateProductInputDTO = z.infer<typeof CreateProductRequestSchema>;
-
-export default CreateProductRequestSchema;
+export default CreateProductInputDTO;

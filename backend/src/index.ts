@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import express from "express";
 import { fileURLToPath } from 'url';
 import type { Request, Response, NextFunction, Application } from 'express';
-import globalErrorHandler from "./presentation/common/middlewares/global.error.handler";
+import globalErrorHandler from "./presentation/middlewares/global.error.handler";
 import ProductRepository from './modules/product/infrastructure/repositories/ProductRepository';
 import ProductPersistencMapper from './modules/product/infrastructure/mappers/product.persistenc.mapper';
 import ProductService from './modules/product/application/services/product.service';
@@ -17,7 +17,7 @@ import RegisterUserController from "./modules/user/presentation/controller/regis
 import RegisterRouter from './modules/user/presentation/routes/register.routes';
 
 import { prisma } from './infrastructure/database/prisma';
-import BcryptPasswordHasher from './modules/user/infrastructure/security/bcrypt.password.hasher';
+import BcryptPasswordHasher from './modules/user/infrastructure/service/bcrypt.password.hasher';
 
 const PORT = 4000;
 const app: Application = express();
