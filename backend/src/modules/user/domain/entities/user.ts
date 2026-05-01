@@ -14,23 +14,10 @@ export default class User extends Auditable {
         this.hashedPassword = hashedPassword;
     }
 
-    getName(): Name {
-        return this.name;
-    }
+    getName(): Name { return this.name; }
+    getEmail(): Email { return this.email; }
+    getPassword(): string { return this.hashedPassword; }
 
-    getEmail(): Email {
-        return this.email;
-    }
-
-    getPassword(): string {
-        return this.hashedPassword;
-    }
-
-    setName(name: string): void {
-        this.name = Name.create(name)
-    }
-
-    setEmail(email: string): void {
-        this.email = Email.create(email);
-    }
+    setName(name: string): void { this.name = Name.create(name); }
+    setEmail(email: string): void { this.email = Email.create(email); }
 }

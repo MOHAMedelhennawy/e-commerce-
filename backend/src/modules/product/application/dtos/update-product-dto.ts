@@ -1,8 +1,6 @@
-import * as z from "zod";
-import CreateProductRequestDTO from "./create.product.dto";
+import CreateProductInputDTO from "./create.product.dto";
 
-const UpdateProductRequestSchema = CreateProductRequestDTO.partial();
+interface UpdateProductInputDTO extends Partial<CreateProductInputDTO> {
+}
 
-export type UpdateProductInputDTO = z.infer<typeof UpdateProductRequestSchema>;
-
-export default UpdateProductRequestSchema;
+export default UpdateProductInputDTO;
