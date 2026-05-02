@@ -1,11 +1,11 @@
 import Product from "../../domain/entities/product";
 import type ProductRow from "../types/productRow";
 import { Prisma } from "../../../../../generated/prisma/client";
-import type IPersistencMapper from "../../../../infrastructure/mappers/persistenc.mapper.interface";
+import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 
 export default class ProductPersistencMapper implements IPersistencMapper<Product, ProductRow>{
     toDomain(row: ProductRow): Product {
-        return new Product(
+        return Product.reconstitute(
             row.id,
             row.title,
             row.price.toNumber(),

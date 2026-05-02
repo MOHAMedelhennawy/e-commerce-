@@ -3,7 +3,7 @@ import { ValidationError } from "../../../../shared/domain/errors/domain.errors"
 import ERROR from "../../../../shared/domain/errors/error.messages";
 
 export default class Money {
-    constructor(private readonly amount: number) {}
+    private constructor(private readonly amount: number) {}
 
     toNumber(): number {
         return this.amount;
@@ -14,6 +14,10 @@ export default class Money {
             throw new ValidationError(ERROR.PRODUCT.MONEY.INVALID);
         }
 
+        return new Money(amount);
+    }
+
+    static reconstitute(amount: number): Money {
         return new Money(amount);
     }
 }

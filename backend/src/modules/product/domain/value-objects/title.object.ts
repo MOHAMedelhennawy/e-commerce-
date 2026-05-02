@@ -23,4 +23,8 @@ export default class Title {
 
         return new Title(text);
     }
+
+    static reconstitute(text: string): Title {
+        return new Title(text);
+    }
 }
