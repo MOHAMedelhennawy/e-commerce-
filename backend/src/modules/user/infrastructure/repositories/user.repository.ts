@@ -1,7 +1,7 @@
 import User from "../../domain/entities/user";
 import { PrismaClient } from "../../../../../generated/prisma/client";
 import type IUserRepository from "../../domain/repositories/user.repository.interface";
-import type IPersistencMapper from "../../../../infrastructure/mappers/persistenc.mapper.interface";
+import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 import type UserRow from "../types/user.row";
 
 type UserDelegate = PrismaClient["users"]

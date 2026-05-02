@@ -1,4 +1,3 @@
-import ID from "../../../../shared/domain/value-object/Id-object";
 import User from "../../domain/entities/user";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type UserInputDTO from "../dtos/user.intput.dto";
@@ -15,7 +14,7 @@ export default class UserApplicationMapper implements IApplicationMapper<User, U
 
     toDTO(user: User): UserOutputDTO {
         return {
-            id: user.getId(),
+            id: user.getId().toString(),
             name: user.getName().toString(),
             email: user.getEmail().toString(),
         }

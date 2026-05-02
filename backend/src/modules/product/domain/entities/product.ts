@@ -9,7 +9,7 @@ export default class Product extends Auditable {
     private price: Money;
     private stock: Stock;
 
-    private constructor(id: string, title: Title, price: Money, stock: Stock, created_at: Date, updated_at: Date) {
+    private constructor(id: ID, title: Title, price: Money, stock: Stock, created_at: Date, updated_at: Date) {
         super(id, created_at, updated_at)
         this.title = title;
         this.price = price;
@@ -56,7 +56,7 @@ export default class Product extends Auditable {
 
     static reconstitute(id: string, title: string, price: number, stock: number, created_at: Date, updated_at: Date) {
         return new Product(
-            id,
+            ID.reconstitute(id),
             Title.reconstitute(title),
             Money.reconstitute(price),
             Stock.reconstitute(stock),

@@ -1,6 +1,6 @@
 import Product from "../../domain/entities/product";
 import type ProductRow from "../types/productRow"
-import type IPersistencMapper from "../../../../infrastructure/mappers/persistenc.mapper.interface";
+import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 import type IProductRepository from "../../domain/repositories/product-repository-interface";
 import { PrismaClient } from "../../../../../generated/prisma/client";
 
