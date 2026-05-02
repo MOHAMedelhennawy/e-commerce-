@@ -7,9 +7,12 @@ export default class Email {
 
     private constructor(private readonly value: string) {}
 
+    toString(): string {
+        return this.value;
+    }
     static create(value: string): Email {
         const len = value.length;
-
+        
         if (len < USER_LIMITS.EMAIL.MIN) {
             throw new ValidationError(ERROR.USER.EMAIL.TOO_SHORT(len));
         }
@@ -23,7 +26,7 @@ export default class Email {
         return new Email(value);
     }
 
-    toString(): string {
-        return this.value;
+    static reconstitute(value: string) {
+        return new Email(value);
     }
 }

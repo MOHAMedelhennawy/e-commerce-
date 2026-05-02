@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import RegisterUserService from "../../application/services/register.user.service";
-import type RegisterUserInputDTO from "../../application/dtos/register.user.input.dto";
+import type RegisterUserInputDTO from "../../application/dtos/register/register.user.input.dto";
 
 export default class RegisterUserController {
     constructor(private service: RegisterUserService){}

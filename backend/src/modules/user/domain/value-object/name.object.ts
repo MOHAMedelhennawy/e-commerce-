@@ -21,4 +21,8 @@ export default class Name {
 
         return new Name(fullName);
     }
+
+    static reconstitute(fullName: string) {
+        return new Name(fullName);
+    }
 }
