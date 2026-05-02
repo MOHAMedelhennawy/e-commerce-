@@ -13,7 +13,7 @@ export default class ProductApplicationMapper {
 
     static toDTO(product: Product): ProductResponseDTO {
         return {
-            id: product.getId(),
+            id: product.getId().toString(),
             title: product.getTitle().toString(),
             price: product.getPrice().toNumber(),
             stock: product.getStock().toNumber(),

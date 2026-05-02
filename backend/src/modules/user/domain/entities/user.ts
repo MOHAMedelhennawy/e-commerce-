@@ -8,7 +8,7 @@ export default class User extends Auditable {
     private email: Email;
     private password: string;
 
-    private constructor(id: string, name: Name, email: Email, hashedPassword: string, created_at: Date, updated_at: Date) {
+    private constructor(id: ID, name: Name, email: Email, hashedPassword: string, created_at: Date, updated_at: Date) {
         super(id, created_at, updated_at);
         this.name = name
         this.email = email;
@@ -60,7 +60,7 @@ export default class User extends Auditable {
      */
     static reconstitute(id: string, name: string, email: string, password: string, created_at: Date, updated_at: Date) {
         return new User(
-            id,
+            ID.reconstitute(id),
             Name.reconstitute(name),
             Email.reconstitute(email),
             password,

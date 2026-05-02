@@ -17,7 +17,7 @@ export default class ProductPersistencMapper implements IPersistencMapper<Produc
 
     toPersistence(product: Product): ProductRow {
         return {
-            id: product.getId(),
+            id: product.getId().toString(),
             title: product.getTitle().toString(),
             price: new Prisma.Decimal(product.getPrice().toNumber()),
             stock: product.getStock().toNumber(),

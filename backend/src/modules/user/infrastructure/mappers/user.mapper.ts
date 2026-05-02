@@ -15,7 +15,7 @@ export default class UserMapper implements IPersistencMapper<User, UserRow> {
     }
     toPersistence(user: User): UserRow {
         return {
-            id: user.getId(),
+            id: user.getId().toString(),
             name: user.getName().toString(),
             email: user.getEmail().toString(),
             password: user.getPassword(),

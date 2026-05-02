@@ -1,41 +1,21 @@
-import { validate as isValid, v4 as uuidv4 } from 'uuid';
-import { ValidationError } from "../errors/domain.errors";
-import ERROR from '../errors/error.messages';
+import { v4 as uuidv4 } from 'uuid';
 
 export default class ID {
     private value: string
 
-    constructor(value: string) {
-        this.value = this.assignID(value);
+    private constructor(value: string) {
+        this.value = value;
     }
 
     toString() {
         return this.value;
     }
 
-    private assignID(value: string): string {
-        if (value === undefined) {
-            throw new ValidationError(ERROR.ID.MISSING);
-        }
-
-        if (!isValid(value)) {
-            throw new ValidationError(ERROR.ID.INVALID(value));
-        }   
-
-        return value;
+    static generate(): ID {
+        return new ID(uuidv4());
     }
 
-    static validate(id: string) {
-        if (id === undefined) {
-            throw new ValidationError(ERROR.ID.MISSING);
-        }
-
-        if (!isValid(id)) {
-            throw new ValidationError(ERROR.ID.INVALID(id));
-        }   
-    }
-
-    static generate() {
-        return uuidv4();
+    static reconstitute(value: string) {
+        return new ID(value);
     }
 }
