@@ -16,4 +16,8 @@ export default class Stock {
 
         return new Stock(amount);
     }
+
+    static reconstitute(amount: number): Stock {
+        return new Stock(amount);
+    }
 }

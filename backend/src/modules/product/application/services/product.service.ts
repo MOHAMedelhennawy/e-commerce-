@@ -1,10 +1,10 @@
 import ERROR from "../../../../shared/domain/errors/error.messages";
 import { NotFoundError } from "../../../../shared/domain/errors/domain.errors";
+import ProductApplicationMapper from "../mappers/product.application.mapper";
 import type IProductRepository from "../../domain/repositories/product-repository-interface"
 import type ProductResponseDTO from "../dtos/product-response-dto";
 import type CreateProductInputDTO from "../dtos/create.product.dto";
 import type UpdateProductInputDTO from "../dtos/update-product-dto";
-import ProductApplicationMapper from "../mappers/product.application.mapper";
 
 export default class ProductService {
     private repository: IProductRepository
