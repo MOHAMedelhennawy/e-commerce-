@@ -1,7 +1,6 @@
 export class AppError extends Error {
     statusCode: number;
     isOperational: boolean;
-    /** Express-style payload field (e.g. `"error"` | `"fail"`). */
     status: string;
 
     constructor(

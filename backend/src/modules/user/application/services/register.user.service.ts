@@ -1,10 +1,12 @@
 import User from "../../domain/entities/user";
+import Email from "../../domain/value-object/email.object";
+import ERROR from "../../../../shared/domain/errors/error.messages";
+import Unauthorized from "../../../../shared/domain/errors/unauthorized.error";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type IPasswordHasher from "../interfaces/password.hasher.interface";
 import type IUserRepository from "../../domain/repositories/user.repository.interface";
 import type RegiserUserInputDTO from "../dtos/register/register.user.input.dto";
 import type RegisterUserOutputDTO from "../dtos/register/register.user.output.dto";
-import Email from "../../domain/value-object/email.object";
 
 export default class RegisterUserService {
     constructor(
@@ -18,7 +20,7 @@ export default class RegisterUserService {
         const emailIsExist = await this.repository.findUserByEmail(email);
 
         if (emailIsExist) {
-            throw new Error("Invalid email or password")
+            throw new Unauthorized(ERROR.AUTH.EMAIL.EXIST);
         }
 
         const hashedPassword = await this.passwordHasher.hash(dto.password);
