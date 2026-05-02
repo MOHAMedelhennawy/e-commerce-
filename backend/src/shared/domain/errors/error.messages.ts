@@ -31,6 +31,14 @@ const ERROR = {
             TOO_LONG: (max: number) => COMMON.TOO_SHORT('Email', max),
             INVALID: "Invalid email format",
         }
+    },
+    AUTH: {
+        CREDENTIALS: {
+            INVALID: "Invalid email or password",
+        },
+        EMAIL: {
+            EXIST: "This email already exit"
+        }
     }
 }
 
