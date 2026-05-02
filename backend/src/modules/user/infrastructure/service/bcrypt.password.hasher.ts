@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import type IPasswordHasher from "../../application/interfaces/password.hasher.interface";
 
 export default class BcryptPasswordHasher implements IPasswordHasher {
@@ -13,7 +14,6 @@ export default class BcryptPasswordHasher implements IPasswordHasher {
         }
 
         try {
-            const bcrypt = (await import("bcrypt")).default;
             const salt = await bcrypt.genSalt(this.saltRounds);
             return await bcrypt.hash(password, salt);
         } catch (err) {
@@ -23,4 +23,8 @@ export default class BcryptPasswordHasher implements IPasswordHasher {
         }
     }
     
+    async verify(passowrd: string, hash: string): Promise<boolean> {
+        const isMatch = await bcrypt.compare(passowrd, hash);
+        return isMatch;
+    }
 }

@@ -2,8 +2,9 @@ import User from "../../domain/entities/user";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type IPasswordHasher from "../interfaces/password.hasher.interface";
 import type IUserRepository from "../../domain/repositories/user.repository.interface";
-import type RegiserUserInputDTO from "../dtos/register.user.input.dto";
-import type RegisterUserOutputDTO from "../dtos/register.user.output.dto";
+import type RegiserUserInputDTO from "../dtos/register/register.user.input.dto";
+import type RegisterUserOutputDTO from "../dtos/register/register.user.output.dto";
+import Email from "../../domain/value-object/email.object";
 
 export default class RegisterUserService {
     constructor(
@@ -13,15 +14,15 @@ export default class RegisterUserService {
     ) {}
 
     async execute(dto: RegiserUserInputDTO): Promise<RegisterUserOutputDTO> {
-        const emailIsExist = await this.repository.findUserByEmail(dto.email);
+        const email = Email.create(dto.email).toString();
+        const emailIsExist = await this.repository.findUserByEmail(email);
 
         if (emailIsExist) {
-            throw new Error("This email already exit");
+            throw new Error("Invalid email or password")
         }
 
         const hashedPassword = await this.passwordHasher.hash(dto.password);
-        const hashedDTO = { ...dto, password: hashedPassword };
-        const user = this.mapper.toDomain(hashedDTO);
+        const user = User.create(dto.name, dto.email, hashedPassword);
         await this.repository.createUser(user);
         return this.mapper.toDTO(user);
     }
