@@ -1,17 +1,17 @@
 import User from "../../domain/entities/user";
 import type UserRow from "../types/user.row";
-import type IPersistencMapper from "../../../../infrastructure/mappers/persistenc.mapper.interface";
+import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 
 export default class UserMapper implements IPersistencMapper<User, UserRow> {
     toDomain(row: UserRow): User {
-        return new User(
+        return User.reconstitute(
             row.id,
             row.name,
             row.email,
             row.password,
             row.created_at,
-            row.updated_at,
-        )
+            row.updated_at
+        );
     }
     toPersistence(user: User): UserRow {
         return {

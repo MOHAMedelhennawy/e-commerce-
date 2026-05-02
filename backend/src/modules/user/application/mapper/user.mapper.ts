@@ -6,13 +6,10 @@ import type UserOutputDTO from "../dtos/user.output.dto";
 
 export default class UserApplicationMapper implements IApplicationMapper<User, UserInputDTO, UserOutputDTO> {
     toDomain(dto: UserInputDTO): User {
-        return new User(
-            ID.generate(),
+        return User.create(
             dto.name,
             dto.email,
             dto.password,
-            new Date(),
-            new Date(),
         )
     }
 
