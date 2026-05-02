@@ -8,7 +8,7 @@ export default class User extends Auditable {
     private email: Email;
     private password: string;
 
-    constructor(id: string, name: Name, email: Email, hashedPassword: string, created_at: Date, updated_at: Date) {
+    private constructor(id: string, name: Name, email: Email, hashedPassword: string, created_at: Date, updated_at: Date) {
         super(id, created_at, updated_at);
         this.name = name
         this.email = email;
