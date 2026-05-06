@@ -38,7 +38,8 @@ const ERROR = {
         },
         EMAIL: {
             EXIST: "This email already exit"
-        }
+        },
+        REQUIRED: "Authentication Required",
     }
 }
 

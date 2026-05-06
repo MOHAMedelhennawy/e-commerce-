@@ -1,4 +1,4 @@
-import UserInputDTO from "../user.intput.dto";
+import type UserInputDTO from "../user.intput.dto";
 
 interface LoginUserInputDTO extends Omit<UserInputDTO, "name">{};
 
