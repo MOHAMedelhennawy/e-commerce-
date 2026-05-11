@@ -2,7 +2,8 @@ import User from "../../domain/entities/user";
 import { PrismaClient } from "../../../../../generated/prisma/client";
 import type IUserRepository from "../../domain/repositories/user.repository.interface";
 import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
-import type UserRow from "../types/user.row";
+import type { UserRow } from "../types/user.row";
+import Email from "../../domain/value-object/email.object";
 
 type UserDelegate = PrismaClient["users"]
 
@@ -13,9 +14,9 @@ export default class UserRepository implements IUserRepository {
         private mapper: IPersistencMapper<User, UserRow>
     ) {}
 
-    async findUserByEmail(email: string): Promise<User | undefined> {
+    async findUserByEmail(email: Email): Promise<User | undefined> {
         const row = await this.model.findUnique({
-            where: { email },
+            where: { email: email.toString() },
         })
         
         if (!row) {

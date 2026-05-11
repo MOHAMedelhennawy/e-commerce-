@@ -17,7 +17,8 @@ export default class RegisterUserController {
         })
 
         res.status(201).json({
-            success: true,
+            status: "success",
+            message: "User registered successfully",
         });
     }
 }

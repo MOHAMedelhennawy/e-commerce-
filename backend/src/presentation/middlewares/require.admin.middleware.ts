@@ -3,7 +3,7 @@ import type { RequestHandler } from "express";
 import type { TPayload } from "../../modules/user/application/interfaces/token.service.interface";
 
 const requireAdmin: RequestHandler = (req, res, next) => {
-    const user: TPayload = req.user;
+    const user: TPayload = req.user!;
 
     if (user.role !== "ADMIN") {
         throw new Forbidden();

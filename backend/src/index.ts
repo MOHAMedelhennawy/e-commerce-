@@ -1,3 +1,4 @@
+/// <reference path="../src/@types/express/index.d.ts" />
 import express from "express";
 import type { Request, Response, NextFunction, Application } from 'express';
 import globalErrorHandler from "./presentation/middlewares/global.error.handler";
@@ -19,6 +20,13 @@ import LoginUserController from './modules/user/presentation/controller/login.co
 import LoginUser from './modules/user/application/services/login.user.service';
 import JwtService from "./modules/user/infrastructure/service/jwt.service";
 import cookieParser from "cookie-parser";
+import CartRepository from "./modules/cart/infrastructure/repositories/cart.repository";
+import CartMapper from "./modules/cart/infrastructure/mappers/cart.mapper";
+import CartService from "./modules/cart/application/service/add.to.cart.service";
+import CartRouter from "./modules/cart/presentation/routes/cart.routes";
+import CartController from "./modules/cart/presentation/controller/cart.controller";
+import CartApplicationMapper from "./modules/cart/application/mapper/cart.application.mapper";
+import ProductApplicationMapper from "./modules/product/application/mappers/product.application.mapper";
 
 const PORT = 4000;
 const app: Application = express();
@@ -40,8 +48,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 const jwtService = new JwtService();
 
 // Product
+const productApplicationMapper = new ProductApplicationMapper();
 const productRepository = new ProductRepository(prisma.product, new ProductPersistencMapper());
-const productService = new ProductService(productRepository)
+const productService = new ProductService(productRepository, productApplicationMapper)
 const productController = new ProductController(productService)
 app.use("/api/v1/product", productRouter(productController, jwtService));
 
@@ -59,6 +68,12 @@ app.use("/api/v1/register", RegisterRouter(registerController));
 const loginService = new LoginUser(userRepository, bcryptPasswordHasher, userApplicationMapper, jwtService);
 const loginUserController = new LoginUserController(loginService);
 app.use("/api/v1/login", LoginRouter(loginUserController))
+
+// Cart
+const cartRepository = new CartRepository(prisma.carts, new CartMapper());
+const cartService = new CartService(cartRepository, productRepository, new CartApplicationMapper());
+const cartController = new CartController(cartService);
+app.use("/api/v1/cart", CartRouter(cartController, jwtService));
 
 app.use(globalErrorHandler);
 

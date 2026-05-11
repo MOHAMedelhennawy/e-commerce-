@@ -1,8 +1,8 @@
-import Auditable from "../../../../shared/domain/entities/Auditable.ts";
-import ID from "../../../../shared/domain/value-object/Id-object.ts";
-import Money from "../value-objects/money-object.ts";
-import Stock from "../value-objects/stock.object.ts";
-import Title from "../value-objects/title.object.ts";
+import ID from "../../../../shared/domain/value-object/Id-object";
+import Money from "../../../../shared/domain/value-object/money-object";
+import Title from "../value-objects/title.object";
+import Auditable from "../../../../shared/domain/entities/Auditable";
+import Stock from "../../../../shared/domain/value-object/stock.object";
 
 export default class Product extends Auditable {
     private title: Title;
@@ -26,11 +26,15 @@ export default class Product extends Auditable {
     setPrice(price: number) { this.price = Money.create(price) };
     setStock(stock: number) { this.stock = Stock.create(stock) };
 
-    updateProduct(title?: string, price?: number, stock?: number) {
-        if (title) this.setTitle(title);
-        if (price) this.setPrice(price);
-        if (stock) this.setStock(stock);
+    updateProduct(title?: Title, price?: Money, stock?: Stock) {
+        if (title !== undefined) this.title = title;
+        if (price !== undefined) this.price = price;
+        if (stock !== undefined) this.stock = stock;
         this.touch();
+    }
+
+    isAvailable(): boolean {
+        return this.stock.isAvialable()
     }
 
     // Factories

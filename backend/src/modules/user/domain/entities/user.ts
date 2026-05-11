@@ -63,13 +63,13 @@ export default class User extends Auditable {
      *
      * @returns new user entity any way, no error is should to throw
      */
-    static reconstitute(id: string, name: string, email: string, password: string, role: string, created_at: Date, updated_at: Date) {
+    static reconstitute(id: string, name: string, email: string, password: string, role: Role, created_at: Date, updated_at: Date) {
         return new User(
             ID.reconstitute(id),
             Name.reconstitute(name),
             Email.reconstitute(email),
             password,
-            role === "ADMIN" ? Role.ADMIN : Role.USER,
+            role,
             created_at,
             updated_at,
         )

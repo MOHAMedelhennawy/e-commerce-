@@ -1,6 +1,6 @@
-import { ValidationError } from "../../../../shared/domain/errors/domain.errors";
-import ERROR from "../../../../shared/domain/errors/error.messages";
-import { PRODUCT_LIMITS } from "../../../../shared/domain/constants/domain.constants";
+import { ValidationError } from "../../domain/errors/domain.errors";
+import ERROR from "../../domain/errors/error.messages";
+import { PRODUCT_LIMITS } from "../..//domain/constants/domain.constants";
 
 export default class Stock {
     private constructor(private readonly amount: number){}
@@ -9,8 +9,12 @@ export default class Stock {
         return this.amount;
     }
 
+    isAvialable() {
+        return this.amount >= 1;
+    }
+
     static create(amount: number): Stock {
-        if (!amount || amount < PRODUCT_LIMITS.STOCK.MIN) {
+        if (amount == null || amount < PRODUCT_LIMITS.STOCK.MIN) {
             throw new ValidationError(ERROR.PRODUCT.STOCK.INVALID);
         }
 

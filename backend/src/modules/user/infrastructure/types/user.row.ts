@@ -10,4 +10,4 @@ type UserRow = {
     updated_at: Date,
 }
 
-export default UserRow;
+export type { UserRow };
