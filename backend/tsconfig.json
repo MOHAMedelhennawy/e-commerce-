@@ -9,7 +9,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "ESNext",
     "target": "ES2023",
-    "types": [],
+    "types": ["node", "express"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -17,7 +17,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "typeRoots": ["./src/@types", "./node_modules/@types"],
-  
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*", "src/@types/*"]
+    },
+
     // Other Outputs
     "sourceMap": true,
     "declaration": true,
@@ -45,5 +49,9 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+  },
+  "include": [
+    "src/**/*",
+    "src/@types/**/*.d.ts"
+  ]
 }

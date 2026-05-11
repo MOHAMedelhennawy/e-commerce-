@@ -1,5 +1,4 @@
-interface IApplicationMapper<TEntity, InputDTO, OutputDTO> {
-    toDomain(dto: InputDTO): TEntity,
+interface IApplicationMapper<TEntity, OutputDTO> {
     toDTO(entity: TEntity): OutputDTO,
 }
 

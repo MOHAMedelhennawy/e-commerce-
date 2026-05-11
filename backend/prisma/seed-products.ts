@@ -1,31 +1,37 @@
 import "dotenv/config";
-import { prisma } from "../src/shared/lib/prisma.ts";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client";
 
-async function seedProducts() {
-  const products = [
-    { title: "Gaming Mouse", price: 49.99, stock: 30 },
-    { title: "Mechanical Keyboard", price: 89.5, stock: 20 },
-    { title: "USB-C Hub", price: 34.0, stock: 50 },
-    { title: "27-inch Monitor", price: 219.99, stock: 12 },
-    { title: "Laptop Stand", price: 27.5, stock: 40 },
-  ];
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const prisma = new PrismaClient({ adapter });
 
-  await prisma.product.createMany({
-    data: products,
-  });
+const products = [
+  { title: "Wireless Mouse", price: 29.99, stock: 100 },
+  { title: "Mechanical Keyboard", price: 89.99, stock: 50 },
+  { title: 'USB-C Hub 7-in-1', price: 49.99, stock: 75 },
+  { title: '27" 4K Monitor', price: 349.99, stock: 30 },
+  { title: "HD Webcam 1080p", price: 79.99, stock: 60 },
+  { title: "Noise Cancelling Headphones", price: 199.99, stock: 40 },
+  { title: "Portable SSD 1TB", price: 129.99, stock: 45 },
+  { title: "Ergonomic Standing Desk", price: 499.99, stock: 15 },
+];
 
-  const insertedProducts = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
-
-  console.log("Seeded products:", insertedProducts);
+async function main() {
+  for (const product of products) {
+    await prisma.product.create({
+      data: {
+        title: product.title,
+        price: product.price,
+        stock: product.stock,
+      },
+    });
+  }
+  console.log(`Seeded ${products.length} products.`);
 }
 
-seedProducts()
-  .catch((error) => {
-    console.error("Seeding failed:", error);
+main()
+  .catch((e) => {
+    console.error(e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect());

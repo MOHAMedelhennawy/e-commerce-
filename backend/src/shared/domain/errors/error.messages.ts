@@ -19,7 +19,8 @@ const ERROR = {
         },
         STOCK: {
             INVALID: "Product stock cannot be a negative value."
-        }
+        },
+        OUT_OF_STOCK: "Product out of stock"
     },
     USER: {
         NAME: {
@@ -30,6 +31,10 @@ const ERROR = {
             TOO_SHORT: (min: number) => COMMON.TOO_SHORT('Email', min),
             TOO_LONG: (max: number) => COMMON.TOO_SHORT('Email', max),
             INVALID: "Invalid email format",
+        },
+        PASSWORD: {
+            TOO_SHORT: (min: number) => COMMON.TOO_SHORT('Password', min),
+            TOO_LONG: (max: number) => COMMON.TOO_LONG('Password', max),
         }
     },
     AUTH: {
