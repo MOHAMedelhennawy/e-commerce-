@@ -5,22 +5,22 @@ import Conflict from "../../../../shared/domain/errors/conflict.error";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type IPasswordHasher from "../interfaces/password.hasher.interface";
 import type IUserRepository from "../../domain/repositories/user.repository.interface";
-import type RegiserUserInputDTO from "../dtos/register/register.user.input.dto";
+import type RegisterUserInputDTO from "../dtos/register/register.user.input.dto";
 import type RegisterUserOutputDTO from "../dtos/register/register.user.output.dto";
 import type ITokenService from "../interfaces/token.service.interface";
-import type UserInputDTO from "../dtos/user.intput.dto";
 import type UserOutputDTO from "../dtos/user.output.dto";
+import type { TPayload } from "../interfaces/token.service.interface";
 
 export default class RegisterUserService {
     constructor(
         private repository: IUserRepository,
         private passwordHasher: IPasswordHasher,
-        private mapper: IApplicationMapper<User, UserInputDTO, UserOutputDTO>,
+        private mapper: IApplicationMapper<User, UserOutputDTO>,
         private tokenService: ITokenService
     ) {}
 
-    async execute(dto: RegiserUserInputDTO): Promise<RegisterUserOutputDTO> {
-        const email = Email.create(dto.email).toString();
+    async execute(dto: RegisterUserInputDTO): Promise<RegisterUserOutputDTO> {
+        const email = Email.create(dto.email);
         const emailIsExist = await this.repository.findUserByEmail(email);
 
         if (emailIsExist) {
@@ -30,7 +30,9 @@ export default class RegisterUserService {
         const hashedPassword = await this.passwordHasher.hash(dto.password);
         const user = User.create(dto.name, dto.email, hashedPassword);
         await this.repository.createUser(user);
-        const token = this.tokenService.sign(user);
+
+        const payload: TPayload = { user_id: user.getId().toString(), role: user.getRole() };
+        const token = this.tokenService.sign(payload);
 
         return { ...this.mapper.toDTO(user), token };
     }

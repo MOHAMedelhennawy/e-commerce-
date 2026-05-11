@@ -1,17 +1,9 @@
 import Product from "../../domain/entities/product";
-import type CreateProductInputDTO from "../dtos/create.product.dto";
+import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type ProductResponseDTO from "../dtos/product-response-dto";
 
-export default class ProductApplicationMapper {
-    static toDomain(dto: CreateProductInputDTO): Product {
-        return Product.create(
-            dto.title,
-            dto.price,
-            dto.stock,
-        )
-    }
-
-    static toDTO(product: Product): ProductResponseDTO {
+export default class ProductApplicationMapper implements IApplicationMapper<Product, ProductResponseDTO>{
+    toDTO(product: Product): ProductResponseDTO {
         return {
             id: product.getId().toString(),
             title: product.getTitle().toString(),

@@ -3,6 +3,7 @@ import requireAuth from "../../../../presentation/middlewares/require.authentica
 import requireAdmin from "../../../../presentation/middlewares/require.admin.middleware";
 import type ProductController from "../controllers/product.controller";
 import type ITokenService from "../../../user/application/interfaces/token.service.interface";
+
 const productRouter = (controller: ProductController, tokenService: ITokenService) => {
     const router = express.Router();
     

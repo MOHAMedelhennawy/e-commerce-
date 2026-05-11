@@ -1,5 +1,3 @@
-import User from "../../domain/entities/user";
-
 export type TPayload = {
     user_id: string,
     role: string,
@@ -8,6 +6,6 @@ export type TPayload = {
 }
 
 export default interface ITokenService {
-    sign(payload: User): string,
+    sign(payload: TPayload): string,
     verify(token: string): TPayload,
 }

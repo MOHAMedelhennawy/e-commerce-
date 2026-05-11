@@ -1,17 +1,8 @@
 import User from "../../domain/entities/user";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
-import type UserInputDTO from "../dtos/user.intput.dto";
 import type UserOutputDTO from "../dtos/user.output.dto";
 
-export default class UserApplicationMapper implements IApplicationMapper<User, UserInputDTO, UserOutputDTO> {
-    toDomain(dto: UserInputDTO): User {
-        return User.create(
-            dto.name,
-            dto.email,
-            dto.password,
-        )
-    }
-
+export default class UserApplicationMapper implements IApplicationMapper<User, UserOutputDTO> {
     toDTO(user: User): UserOutputDTO {
         return {
             id: user.getId().toString(),
@@ -19,5 +10,4 @@ export default class UserApplicationMapper implements IApplicationMapper<User, U
             email: user.getEmail().toString(),
         }
     }
-    
 }

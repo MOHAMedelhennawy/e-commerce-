@@ -3,6 +3,7 @@ import type ProductRow from "../types/productRow"
 import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 import type IProductRepository from "../../domain/repositories/product-repository-interface";
 import { PrismaClient } from "../../../../../generated/prisma/client";
+import ID from "../../../../shared/domain/value-object/Id-object";
 
 type ProductDelegate = PrismaClient["product"]
 
@@ -15,8 +16,8 @@ class ProductRepository implements IProductRepository {
         this.mapper = mapper;
     }
 
-    async findUnique(id: string): Promise<Product | undefined> {
-        const row = await this.model.findFirst({ where: { id } });
+    async findUnique(id: ID): Promise<Product | undefined> {
+        const row = await this.model.findFirst({ where: { id: id.toString() } });
         return row ? this.mapper.toDomain(row) : undefined;
     }
 
@@ -44,8 +45,8 @@ class ProductRepository implements IProductRepository {
         return this.mapper.toDomain(row);
     }
 
-    async deleteById(id: string): Promise<void> {
-        await this.model.delete({ where: { id } });
+    async deleteById(id: ID): Promise<void> {
+        await this.model.delete({ where: { id: id.toString() } });
     }
 }
 

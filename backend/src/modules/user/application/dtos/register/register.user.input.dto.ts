@@ -1,4 +1,4 @@
-import UserInputDTO from "../user.intput.dto";
+import UserInputDTO from "../user.input.dto";
 
 interface RegisterUserInputDTO extends UserInputDTO{}
 

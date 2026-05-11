@@ -1,6 +1,3 @@
-enum Role {
-    USER = "USER",
-    ADMIN = "ADMIN"
-}
+import { Role } from "../../../../../generated/prisma/client";
 
 export default Role;

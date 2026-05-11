@@ -1,11 +1,12 @@
+import ID from "../../../../shared/domain/value-object/Id-object";
 import Product from "../entities/product";
 
 interface IProductRepository {
-    findUnique(id: string): Promise<Product | undefined>;
+    findUnique(id: ID): Promise<Product | undefined>;
     findAll(): Promise<Product[]>;
     save(product: Product): Promise<Product>;
     create(product: Product): Promise<Product>;
-    deleteById(id: string): Promise<void>;
+    deleteById(id: ID): Promise<void>;
 }
 
 export default IProductRepository;

@@ -1,5 +1,5 @@
 import User from "../../domain/entities/user";
-import type UserRow from "../types/user.row";
+import type { UserRow } from "../types/user.row";
 import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 
 export default class UserMapper implements IPersistencMapper<User, UserRow> {

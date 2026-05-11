@@ -1,8 +1,9 @@
 import * as z from "zod";
+import ERROR from "../../../../shared/domain/errors/error.messages";
 
 const LoginUserSchema = z.object({
-    email: z.string().nonempty({ message: "Email field is required" }),
-    password: z.string().nonempty({ message: "Password field is required" }),
+    email: z.string().email({ message: ERROR.USER.EMAIL.INVALID }),
+    password: z.string().min(1, { message: "Password is required" }),
 });
 
 export default LoginUserSchema;
