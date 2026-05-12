@@ -1,9 +1,11 @@
 import Cart from "../../domain/entities/cart";
 import type { CartWithItemsRow } from "../types/cart.with.items.row";
 import type { CartItemRow } from "../types/cart.with.items.row";
-import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
+import type ICartMapper from "../interfaces/cart.mapper.interface";
+import ID from "../../../../shared/domain/value-object/Id-object";
+import CartItem from "../../domain/entities/cart.item";
 
-export default class CartMapper implements IPersistencMapper<Cart, CartWithItemsRow>{
+export default class CartMapper implements ICartMapper {
     toDomain(row: CartWithItemsRow): Cart {
         const cart = Cart.reconstitute(
             row.id,
@@ -23,25 +25,24 @@ export default class CartMapper implements IPersistencMapper<Cart, CartWithItems
         return {
             id: cart.getId().toString(),
             user_id: cart.getUserId().toString(),
-            cart_items: this.itemsToPersistence(cart),
+            cart_items: this.itemsRowsFromCart(cart),
             created_at: cart.getTimestamps().createdAt,
             updated_at: cart.getTimestamps().updatedAt
         }
     }
 
-    itemsToPersistence(cart: Cart): CartItemRow[] {
-        let itemsObject: CartItemRow[] = [];
-
-        cart.getItems().forEach(
-            (value, key) => {
-                itemsObject.push({
-                    id: value.getId().toString(),
-                    product_id: key.toString(),
-                    quantity: value.getQuantity(),
-                    price: value.getPrice().toDecimal(),
-                })
-            }
-        )
-        return itemsObject;
+    itemToPersistence(productId: ID, item: CartItem): CartItemRow {
+        return {
+            id: item.getId().toString(),
+            product_id: productId.toString(),
+            quantity: item.getQuantity(),
+            price: item.getPrice().toDecimal(),
+        }
     }
+
+    private itemsRowsFromCart(cart: Cart): CartItemRow[] {
+    return Array.from(cart.getItems().entries()).map(
+        ([key, value]) => this.itemToPersistence(ID.reconstitute(key), value)
+    );
+}
 }

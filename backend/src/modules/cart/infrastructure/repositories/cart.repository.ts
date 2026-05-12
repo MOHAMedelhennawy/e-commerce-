@@ -1,19 +1,18 @@
 import ID from "../../../../shared/domain/value-object/Id-object";
 import Cart from "../../domain/entities/cart";
-import CartItem from "../../domain/entities/cart.item";
 import { prisma } from "../../../../infrastructure/database/prisma";
 import { Prisma, PrismaClient } from "../../../../../generated/prisma/client";
 import type ICartRepository from "../../domain/repository/cart.repository.interface";
 import type { CartWithItemsRow } from "../types/cart.with.items.row";
-import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 import type { CartItemRow } from "../types/cart.with.items.row";
+import type ICartMapper from "../interfaces/cart.mapper.interface";
 
 type CartDelegate = PrismaClient["carts"]
 
 export default class CartRepository implements ICartRepository {
     constructor (
         private model: CartDelegate,
-        private mapper: IPersistencMapper<Cart, CartWithItemsRow>
+        private mapper: ICartMapper
     ) {}
 
     async getCartWithItems(userId: ID): Promise<Cart | undefined> {
@@ -125,11 +124,11 @@ export default class CartRepository implements ICartRepository {
                 removedItemIds.push(id)
             } else if (!existingItem && incomingItem) {
                 itemsToAdd.push(
-                    this.itemToPersistence(productId, incomingItem)
+                    this.mapper.itemToPersistence(productId, incomingItem)
                 )
             } else if (existingItem && incomingItem) {
                 itemsToUpdate.push(
-                    this.itemToPersistence(productId, incomingItem)
+                    this.mapper.itemToPersistence(productId, incomingItem)
                 );
             }
         }
@@ -138,15 +137,6 @@ export default class CartRepository implements ICartRepository {
             removedItemIds,
             itemsToAdd,
             itemsToUpdate
-        }
-    }
-
-    private itemToPersistence(productId: ID, item: CartItem): CartItemRow {
-        return {
-            id: item.getId().toString(),
-            product_id: productId.toString(),
-            quantity: item.getQuantity(),
-            price: item.getPrice().toDecimal()
         }
     }
 }
