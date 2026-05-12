@@ -24,6 +24,10 @@ export default class CartItem extends Entity {
         this.quantity++;
     }
 
+    decreaseQuantity() {
+        this.quantity--;
+    }
+
     getTotal(): Money {
         return this.price.multiply(this.quantity);
     }

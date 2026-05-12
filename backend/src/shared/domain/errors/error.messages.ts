@@ -45,6 +45,10 @@ const ERROR = {
             EXIST: "This email already exit"
         },
         REQUIRED: "Authentication Required",
+    },
+    CART: {
+        NOT_FOUND: "Your cart is empty",
+        ITEM_NOT_FOUND: "This product is not in your cart",
     }
 }
 

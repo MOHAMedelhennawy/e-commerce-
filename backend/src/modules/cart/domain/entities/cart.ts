@@ -1,7 +1,9 @@
 import ID from "../../../../shared/domain/value-object/Id-object";
+import Money from "../../../../shared/domain/value-object/money-object";
+import ERROR from "../../../../shared/domain/errors/error.messages";
 import Auditable from "../../../../shared/domain/entities/Auditable";
 import CartItem from "./cart.item";
-import Money from "../../../../shared/domain/value-object/money-object";
+import { NotFoundError } from "../../../../shared/domain/errors/domain.errors";
 import type ItemOjbect from "../interfaces/item.object";
 
 export default class Cart extends Auditable {
@@ -17,6 +19,7 @@ export default class Cart extends Auditable {
     has(id: string): boolean {
         return this.items.has(id);
     }
+
     getUserId(): ID {
         return this.user_id;
     }
@@ -33,6 +36,24 @@ export default class Cart extends Auditable {
             item.increaseQuantity();
         } else {
             this.items.set(key, CartItem.create(price));
+        }
+
+        this.touch();
+    }
+
+    removeItem(productId: ID) {
+        const key = productId.toString();
+        const item = this.items.get(key);
+
+        if (!item) {
+            throw new NotFoundError(ERROR.CART.ITEM_NOT_FOUND);
+        }
+
+        if (item.getQuantity() === 1) {
+            this.items.delete(key);
+        } else {
+            item.decreaseQuantity();
+            console.log(item)
         }
 
         this.touch();
@@ -88,5 +109,15 @@ export default class Cart extends Auditable {
         )
 
         return cart;
+    }
+
+    clone(): Cart {
+        return new Cart(
+            this.getId(),
+            this.getUserId(),
+            this.getTimestamps().createdAt,
+            this.getTimestamps().updatedAt,
+            new Map<string, CartItem>(this.getItems()),
+        )
     }
 }
