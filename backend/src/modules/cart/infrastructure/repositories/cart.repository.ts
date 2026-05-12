@@ -43,7 +43,6 @@ export default class CartRepository implements ICartRepository {
             await this.updateCartItems(tx, itemsToUpdate);
             await this.addCartItem(tx, existingCart.getId(), itemsToAdd);
         })
-        
     }
 
     private async createCart(tx: Prisma.TransactionClient, cart: Cart): Promise<void> {

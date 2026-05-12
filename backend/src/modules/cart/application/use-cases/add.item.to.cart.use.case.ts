@@ -3,19 +3,19 @@ import Cart from "../../domain/entities/cart";
 import ERROR from "../../../../shared/domain/errors/error.messages";
 import { InsufficientStockError, NotFoundError } from "../../../../shared/domain/errors/domain.errors";
 import type IProductRepository from "../../../product/domain/repositories/product-repository-interface"
-import type CreateItemInputDTO from "../dtos/create.item.input.dto"
+import type CartItemInputDTO from "../dtos/cart.item.input.dto"
 import type ICartRepository from "../../domain/repository/cart.repository.interface";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
-import type CreateItemOutputDTO from "../dtos/create.item.output.dto";
+import type CartItemResponseDTO from "../dtos/cart.item.response.dto";
 
 export default class AddItemToCartUseCase {
     constructor(
         private cartRepository: ICartRepository,
         private productRepository: IProductRepository,
-        private mapper: IApplicationMapper<Cart, CreateItemOutputDTO>
+        private mapper: IApplicationMapper<Cart, CartItemResponseDTO>
     ) {}
 
-    async execute(dto: CreateItemInputDTO): Promise<CreateItemOutputDTO> {
+    async execute(dto: CartItemInputDTO): Promise<CartItemResponseDTO> {
         const productId = ID.create(dto.product_id);
         const product = await this.productRepository.findUnique(productId);
     

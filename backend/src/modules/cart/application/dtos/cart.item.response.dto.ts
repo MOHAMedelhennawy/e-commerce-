@@ -1,4 +1,4 @@
-interface CreateItemOutputDTO {
+interface CartItemResponseDTO {
     cart_total: number,
     items_count: number,
     items: {
@@ -9,4 +9,4 @@ interface CreateItemOutputDTO {
     }[]
 }
 
-export default CreateItemOutputDTO;
+export default CartItemResponseDTO;

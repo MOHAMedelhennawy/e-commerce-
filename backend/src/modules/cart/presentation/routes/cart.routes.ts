@@ -9,6 +9,8 @@ const CartRouter = (controller: CartController, tokenService: ITokenService) => 
     const router = express.Router();
     
     router.post("/item", requireAuth(tokenService), validate(AddItemSchema), controller.addItem);
+    router.delete("/item/:product_id", requireAuth(tokenService), controller.removeItem);
+
     return router;
 }
 

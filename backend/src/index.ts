@@ -22,11 +22,12 @@ import JwtService from "./modules/user/infrastructure/service/jwt.service";
 import cookieParser from "cookie-parser";
 import CartRepository from "./modules/cart/infrastructure/repositories/cart.repository";
 import CartMapper from "./modules/cart/infrastructure/mappers/cart.mapper";
-import CartService from "./modules/cart/application/use-cases/add.item.to.cart.use.case";
+import AddItemUseCase from "./modules/cart/application/use-cases/add.item.to.cart.use.case";
 import CartRouter from "./modules/cart/presentation/routes/cart.routes";
 import CartController from "./modules/cart/presentation/controller/cart.controller";
 import CartApplicationMapper from "./modules/cart/application/mapper/cart.application.mapper";
 import ProductApplicationMapper from "./modules/product/application/mappers/product.application.mapper";
+import DeleteItemUseCase from "./modules/cart/application/use-cases/delete.item.from.cart.use.case";
 
 const PORT = 4000;
 const app: Application = express();
@@ -70,9 +71,11 @@ const loginUserController = new LoginUserController(loginService);
 app.use("/api/v1/login", LoginRouter(loginUserController))
 
 // Cart
+const cartApplicationMapper = new CartApplicationMapper();
 const cartRepository = new CartRepository(prisma.carts, new CartMapper());
-const addItemUseCase = new CartService(cartRepository, productRepository, new CartApplicationMapper());
-const cartController = new CartController(addItemUseCase);
+const addItemUseCase = new AddItemUseCase(cartRepository, productRepository, cartApplicationMapper);
+const deleteItemUseCase = new DeleteItemUseCase(cartRepository, cartApplicationMapper)
+const cartController = new CartController(addItemUseCase, deleteItemUseCase);
 app.use("/api/v1/cart", CartRouter(cartController, jwtService));
 
 app.use(globalErrorHandler);
