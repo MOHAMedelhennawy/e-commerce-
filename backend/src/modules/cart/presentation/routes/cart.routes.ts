@@ -8,7 +8,7 @@ import type ITokenService from "../../../user/application/interfaces/token.servi
 const CartRouter = (controller: CartController, tokenService: ITokenService) => {
     const router = express.Router();
     
-    router.post("/item", requireAuth(tokenService), validate(AddItemSchema), controller.addItem)
+    router.post("/item", requireAuth(tokenService), validate(AddItemSchema), controller.addItem);
     return router;
 }
 
