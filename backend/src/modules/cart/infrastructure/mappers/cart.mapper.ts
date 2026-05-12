@@ -3,7 +3,7 @@ import type { CartWithItemsRow } from "../types/cart.with.items.row";
 import type { CartItemRow } from "../types/cart.with.items.row";
 import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 
-export default class CartMappre implements IPersistencMapper<Cart, CartWithItemsRow>{
+export default class CartMapper implements IPersistencMapper<Cart, CartWithItemsRow>{
     toDomain(row: CartWithItemsRow): Cart {
         const cart = Cart.reconstitute(
             row.id,
