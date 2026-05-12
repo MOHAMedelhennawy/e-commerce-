@@ -22,7 +22,7 @@ import JwtService from "./modules/user/infrastructure/service/jwt.service";
 import cookieParser from "cookie-parser";
 import CartRepository from "./modules/cart/infrastructure/repositories/cart.repository";
 import CartMapper from "./modules/cart/infrastructure/mappers/cart.mapper";
-import CartService from "./modules/cart/application/service/add.to.cart.service";
+import CartService from "./modules/cart/application/use-cases/add.item.to.cart.use.case";
 import CartRouter from "./modules/cart/presentation/routes/cart.routes";
 import CartController from "./modules/cart/presentation/controller/cart.controller";
 import CartApplicationMapper from "./modules/cart/application/mapper/cart.application.mapper";
@@ -71,8 +71,8 @@ app.use("/api/v1/login", LoginRouter(loginUserController))
 
 // Cart
 const cartRepository = new CartRepository(prisma.carts, new CartMapper());
-const cartService = new CartService(cartRepository, productRepository, new CartApplicationMapper());
-const cartController = new CartController(cartService);
+const addItemUseCase = new CartService(cartRepository, productRepository, new CartApplicationMapper());
+const cartController = new CartController(addItemUseCase);
 app.use("/api/v1/cart", CartRouter(cartController, jwtService));
 
 app.use(globalErrorHandler);

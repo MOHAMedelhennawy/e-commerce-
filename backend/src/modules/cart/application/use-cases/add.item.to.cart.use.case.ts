@@ -8,14 +8,14 @@ import type ICartRepository from "../../domain/repository/cart.repository.interf
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type CreateItemOutputDTO from "../dtos/create.item.output.dto";
 
-export default class CartService {
+export default class AddItemToCartUseCase {
     constructor(
         private cartRepository: ICartRepository,
         private productRepository: IProductRepository,
         private mapper: IApplicationMapper<Cart, CreateItemOutputDTO>
     ) {}
 
-    async addItemToCart(dto: CreateItemInputDTO): Promise<CreateItemOutputDTO> {
+    async execute(dto: CreateItemInputDTO): Promise<CreateItemOutputDTO> {
         const productId = ID.create(dto.product_id);
         const product = await this.productRepository.findUnique(productId);
     
@@ -28,14 +28,13 @@ export default class CartService {
         }
 
         const userId = ID.create(dto.user_id);
-        let userCart = await this.cartRepository.getCartWithItems(userId);
+        const existingCart = await this.cartRepository.getCartWithItems(userId);
 
-        if (!userCart)
-            userCart = Cart.create(dto.user_id);
+        const userCart = existingCart ?? Cart.create(dto.user_id);
 
         userCart.addItem(productId, product.getPrice());
 
-        await this.cartRepository.saveChanges(userCart);
+        await this.cartRepository.saveChanges(userCart, existingCart);
 
         return this.mapper.toDTO(userCart);
     }

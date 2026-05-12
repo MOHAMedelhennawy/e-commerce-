@@ -27,11 +27,8 @@ export default class CartRepository implements ICartRepository {
         return this.mapper.toDomain(row);
     }
 
-    async saveChanges(updatedCart: Cart): Promise<void> {
+    async saveChanges(updatedCart: Cart, existingCart: Cart | undefined): Promise<void> {
         await prisma.$transaction(async (tx) => {
-            const userId = updatedCart.getUserId();
-            
-            const existingCart = await this.getUserCart(tx, userId);
             if (!existingCart) {
                 await this.createCart(tx, updatedCart)
                 return;
@@ -61,16 +58,6 @@ export default class CartRepository implements ICartRepository {
                 }
             }
         })
-    }
-
-    private async getUserCart(tx: Prisma.TransactionClient, userId: ID): Promise<Cart | undefined> {
-        let row = await tx.carts.findUnique({
-            where: { user_id: userId.toString() },
-            include: { cart_items: true }
-        })
-
-        if (!row) return undefined;
-        return this.mapper.toDomain(row);
     }
 
     private mergeItemIds(existingCart: Cart, updatedCart: Cart): Set<string> {
