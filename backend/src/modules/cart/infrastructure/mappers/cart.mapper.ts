@@ -41,8 +41,8 @@ export default class CartMapper implements ICartMapper {
     }
 
     private itemsRowsFromCart(cart: Cart): CartItemRow[] {
-    return Array.from(cart.getItems().entries()).map(
-        ([key, value]) => this.itemToPersistence(ID.reconstitute(key), value)
-    );
-}
+        return Array.from(cart.getItems().entries()).map(
+            ([key, value]) => this.itemToPersistence(ID.reconstitute(key), value)
+        );
+    }
 }
