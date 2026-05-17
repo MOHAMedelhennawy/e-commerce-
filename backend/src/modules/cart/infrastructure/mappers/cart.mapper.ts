@@ -4,7 +4,6 @@ import type { CartItemRow } from "../types/cart.with.items.row";
 import type ICartMapper from "../interfaces/cart.mapper.interface";
 import ID from "../../../../shared/domain/value-object/Id-object";
 import CartItem from "../../domain/entities/cart.item";
-import { Prisma } from "../../../../../generated/prisma/client";
 
 export default class CartMapper implements ICartMapper {
     toDomain(row: CartWithItemsRow): Cart {
@@ -37,13 +36,13 @@ export default class CartMapper implements ICartMapper {
             id: item.getId().toString(),
             product_id: productId.toString(),
             quantity: item.getQuantity(),
-            price: Prisma.Decimal(item.getPrice().toNumber()),
+            price: item.getPrice().toDecimal(),
         }
     }
 
     private itemsRowsFromCart(cart: Cart): CartItemRow[] {
-        return Array.from(cart.getItems().entries()).map(
-            ([key, value]) => this.itemToPersistence(ID.reconstitute(key), value)
-        );
-    }
+    return Array.from(cart.getItems().entries()).map(
+        ([key, value]) => this.itemToPersistence(ID.reconstitute(key), value)
+    );
+}
 }

@@ -10,6 +10,10 @@ export default class Money {
         return this.cents / 100;
     }
 
+    toDecimal(): Decimal {
+        return new Decimal(this.cents).div(100);
+    }
+
     multiply(factor: number): Money {
         return new Money(Math.round(this.cents * factor));
     }

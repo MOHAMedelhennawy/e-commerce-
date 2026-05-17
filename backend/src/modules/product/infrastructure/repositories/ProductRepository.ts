@@ -15,12 +15,6 @@ class ProductRepository implements IProductRepository {
         this.model = model;
         this.mapper = mapper;
     }
-    findManyByIds(ids: ID[]): Promise<Product[]> {
-        throw new Error("Method not implemented.");
-    }
-    saveMany(products: Product[]): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
 
     async findUnique(id: ID): Promise<Product | undefined> {
         const row = await this.model.findFirst({ where: { id: id.toString() } });
