@@ -7,11 +7,12 @@ import type CartItemInputDTO from "../dtos/cart.item.input.dto"
 import type ICartRepository from "../../domain/repository/cart.repository.interface";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type CartItemResponseDTO from "../dtos/cart.item.response.dto";
+import type { IQueryableProduct } from "../../../../shared/domain/interfaces/queryable.product.interface";
 
 export default class AddItemToCartUseCase {
     constructor(
         private cartRepository: ICartRepository,
-        private productRepository: IProductRepository,
+        private productRepository: IQueryableProduct,
         private mapper: IApplicationMapper<Cart, CartItemResponseDTO>
     ) {}
 
