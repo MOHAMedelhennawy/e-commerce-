@@ -25,7 +25,7 @@ export default class Cart extends Auditable {
     }
 
     getItem(productId: ID): CartItem | undefined {
-        return this.items.get(productId.toString());
+        return this.items.get(productId.toString())?.clone();
     }
 
     addItem(productId: ID, price: Money) {
