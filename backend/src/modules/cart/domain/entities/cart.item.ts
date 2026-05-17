@@ -39,6 +39,7 @@ export default class CartItem extends Entity {
             this.price
         )
     }
+
     static create(price: Money): CartItem {
         return new CartItem(
             ID.generate(),

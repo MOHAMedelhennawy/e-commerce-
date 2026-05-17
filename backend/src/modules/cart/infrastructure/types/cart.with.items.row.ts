@@ -2,7 +2,6 @@ import { Decimal } from "@prisma/client/runtime/client";
 
 export type CartItemRow = {
     id: string,
-    // cart_id: string,
     product_id: string,
     quantity: number,
     price: Decimal,

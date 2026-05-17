@@ -33,8 +33,12 @@ export default class Product extends Auditable {
         this.touch();
     }
 
-    isAvailable(): boolean {
-        return this.stock.isAvialable()
+    isAvailable(amount: number = 1): boolean {
+        return this.stock.isAvialable(amount)
+    }
+
+    decreaseStock(amount: number) {
+        this.stock = this.stock.decrease(amount);
     }
 
     // Factories
