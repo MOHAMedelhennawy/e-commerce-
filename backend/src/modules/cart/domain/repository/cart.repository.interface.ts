@@ -3,7 +3,7 @@ import Cart from "../entities/cart";
 
 interface ICartRepository {
     getCartWithItems(user_id: ID): Promise<Cart | undefined>;
-    save(updatedCart: Cart): Promise<void>;
+    saveChanges(cart: Cart, existingCart: Cart | undefined): Promise<void>;
 }
 
 export default ICartRepository;

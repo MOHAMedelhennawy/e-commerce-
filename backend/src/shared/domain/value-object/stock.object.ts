@@ -1,4 +1,4 @@
-import { InsufficientStockError, ValidationError } from "../../domain/errors/domain.errors";
+import { ValidationError } from "../../domain/errors/domain.errors";
 import ERROR from "../../domain/errors/error.messages";
 import { PRODUCT_LIMITS } from "../..//domain/constants/domain.constants";
 
@@ -9,16 +9,8 @@ export default class Stock {
         return this.amount;
     }
 
-    isAvialable(amount: number): boolean {
-        return this.amount >= amount;
-    }
-
-    decrease(amount: number) {
-        if (this.amount < amount) {
-            throw new InsufficientStockError(ERROR.PRODUCT.OUT_OF_STOCK);
-        }
-
-        return new Stock(this.amount - amount);
+    isAvialable() {
+        return this.amount >= 1;
     }
 
     static create(amount: number): Stock {
