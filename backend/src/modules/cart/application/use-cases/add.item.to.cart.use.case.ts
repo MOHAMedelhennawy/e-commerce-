@@ -3,15 +3,15 @@ import Cart from "../../domain/entities/cart";
 import ERROR from "../../../../shared/domain/errors/error.messages";
 import { InsufficientStockError, NotFoundError } from "../../../../shared/domain/errors/domain.errors";
 import type CartItemInputDTO from "../dtos/cart.item.input.dto"
-import type { IProductQuery } from "../../domain/repository/product.query.interface";
 import type ICartRepository from "../../domain/repository/cart.repository.interface";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
 import type CartItemResponseDTO from "../dtos/cart.item.response.dto";
+import type { IQueryableProduct } from "../../../../shared/domain/interfaces/queryable.product.interface";
 
 export default class AddItemToCartUseCase {
     constructor(
         private cartRepository: ICartRepository,
-        private productRepository: IProductQuery,
+        private productRepository: IQueryableProduct,
         private mapper: IApplicationMapper<Cart, CartItemResponseDTO>
     ) {}
 
