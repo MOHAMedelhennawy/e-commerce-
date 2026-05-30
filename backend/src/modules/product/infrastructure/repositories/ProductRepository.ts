@@ -2,18 +2,25 @@ import Product from "../../domain/entities/product";
 import type ProductRow from "../types/productRow"
 import type IPersistencMapper from "../../../../shared/infrastructure/interfaces/persistenc.mapper.interface";
 import type IProductRepository from "../../domain/repositories/product-repository-interface";
-import { PrismaClient } from "../../../../../generated/prisma/client";
+import { Prisma, PrismaClient } from "../../../../../generated/prisma/client";
 import ID from "../../../../shared/domain/value-object/Id-object";
 
 type ProductDelegate = PrismaClient["product"]
 
-class ProductRepository implements IProductRepository {
+class ProductRepository implements IProductRepository<Prisma.TransactionClient> {
     private model: ProductDelegate;
     private mapper: IPersistencMapper<Product, ProductRow>;
 
     constructor(model: ProductDelegate, mapper: IPersistencMapper<Product, ProductRow>) {
         this.model = model;
         this.mapper = mapper;
+    }
+
+    findManyByIds(ids: ID[]): Promise<Product[]> {
+        throw new Error("Method not implemented.");
+    }
+    saveMany(products: Product[], tx?: Prisma.TransactionClient): Promise<void> {
+        throw new Error("Method not implemented.");
     }
 
     async findUnique(id: ID): Promise<Product | undefined> {
