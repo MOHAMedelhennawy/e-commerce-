@@ -74,9 +74,8 @@ app.use("/api/v1/login", LoginRouter(loginUserController))
 const cartApplicationMapper = new CartApplicationMapper();
 const cartRepository = new CartRepository(prisma.carts, new CartMapper());
 const addItemUseCase = new AddItemUseCase(cartRepository, productRepository, cartApplicationMapper);
-const deleteItemUseCase = new DeleteItemUseCase(cartRepository, cartApplicationMapper);
+const deleteItemUseCase = new DeleteItemUseCase(cartRepository, cartApplicationMapper)
 const cartController = new CartController(addItemUseCase, deleteItemUseCase);
-
 app.use("/api/v1/cart", CartRouter(cartController, jwtService));
 
 app.use(globalErrorHandler);
