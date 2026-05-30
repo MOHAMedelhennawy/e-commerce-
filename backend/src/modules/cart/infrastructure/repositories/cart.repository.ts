@@ -9,7 +9,7 @@ import type ICartMapper from "../interfaces/cart.mapper.interface";
 
 type CartDelegate = PrismaClient["carts"]
 
-export default class CartRepository implements ICartRepository {
+export default class CartRepository implements ICartRepository<Prisma.TransactionClient> {
     constructor (
         private model: CartDelegate,
         private mapper: ICartMapper
@@ -26,25 +26,28 @@ export default class CartRepository implements ICartRepository {
         return this.mapper.toDomain(row);
     }
 
-    async save(updatedCart: Cart): Promise<void> {
+    async save(updatedCart: Cart, tx?: Prisma.TransactionClient): Promise<void> {
         const existingCart = await this.getCartWithItems(updatedCart.getUserId());
 
-        await prisma.$transaction(async (tx) => {
+        const execute = async (client: Prisma.TransactionClient) => {
             if (!existingCart) {
-                await this.createCart(tx, updatedCart)
+                await this.createCart(client, updatedCart);
                 return;
             }
 
-            const {
-                removedItemIds,
-                itemsToUpdate,
-                itemsToAdd
-            } = this.computeChanges(existingCart, updatedCart);
+            const { removedItemIds, itemsToUpdate, itemsToAdd } = 
+                this.computeChanges(existingCart, updatedCart);
 
-            await this.deleteCartItems(tx, removedItemIds);
-            await this.updateCartItems(tx, itemsToUpdate);
-            await this.addCartItem(tx, existingCart.getId(), itemsToAdd);
-        });
+            await this.deleteCartItems(client, removedItemIds);
+            await this.updateCartItems(client, itemsToUpdate);
+            await this.addCartItem(client, existingCart.getId(), itemsToAdd);
+        };
+
+        if (tx) {
+            await execute(tx);
+        } else {
+            await prisma.$transaction(async (newTx) => { await execute(newTx); });
+        }
     }
 
     private async createCart(tx: Prisma.TransactionClient, cart: Cart): Promise<void> {
