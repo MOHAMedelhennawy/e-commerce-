@@ -4,7 +4,7 @@ import ERROR from "../../../../shared/domain/errors/error.messages";
 import Auditable from "../../../../shared/domain/entities/Auditable";
 import CartItem from "./cart.item";
 import { NotFoundError } from "../../../../shared/domain/errors/domain.errors";
-import type ItemObject from "../interfaces/item.object";
+import type ItemOjbect from "../interfaces/item.object";
 
 export default class Cart extends Auditable {
     private user_id: ID;
@@ -55,6 +55,7 @@ export default class Cart extends Auditable {
         } else {
             console.log("Item is decreased");
             item.decreaseQuantity();
+            console.log(item)
         }
 
         this.touch();
@@ -84,14 +85,6 @@ export default class Cart extends Auditable {
         return this.items.size;
     }
 
-    clear() {
-        this.items.clear();
-    }
-    
-    isEmpty(): boolean {
-        return this.items.size === 0;
-    }
-
     static create(user_id: string): Cart {
         return new Cart(
             ID.generate(),
@@ -102,7 +95,7 @@ export default class Cart extends Auditable {
         )
     }
 
-    static reconstitute(id: string, user_id: string, created_at: Date, updated_at: Date, cartItems: ItemObject[]): Cart {
+    static reconstitute(id: string, user_id: string, created_at: Date, updated_at: Date, cartItems: ItemOjbect[]): Cart {
         const items: Map<string, CartItem> = new Map<string, CartItem>();
 
         cartItems.forEach(
@@ -126,7 +119,7 @@ export default class Cart extends Auditable {
             this.getUserId(),
             this.getTimestamps().createdAt,
             this.getTimestamps().updatedAt,
-            new Map(this.getItems()),
+            new Map<string, CartItem>(this.getItems()),
         )
     }
 }

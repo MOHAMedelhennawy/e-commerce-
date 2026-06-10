@@ -1,8 +1,8 @@
-interface ItemObject {
+interface ItemOjbect {
     id: string,
     product_id: string,
     quantity: number,
     price: number,
 }
 
-export default ItemObject;
+export default ItemOjbect;

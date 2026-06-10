@@ -75,58 +75,53 @@ export default class CartRepository implements ICartRepository<Prisma.Transactio
                     // skipDuplicates: true
                 }
             }
-        });
+        })
+    }
+
+    private mergeItemIds(existingCart: Cart, updatedCart: Cart): Set<string> {
+        return new Set([...existingCart.getItems().keys(), ...updatedCart.getItems().keys()])
     }
 
     private async addCartItem(tx: Prisma.TransactionClient, cartId: ID, items: CartItemRow[]) {
-        if (!items.length) {
-            return;
-        }
-
-        for (const item of items) {
-            await tx.cart_items.create({
-                data: {
-                    id: item.id,
-                    cart_id: cartId.toString(),
-                    product_id: item.product_id,
-                    quantity: item.quantity,
-                    price: item.price,
-                }
-            })
+        if (items.length > 0) {
+            for (const item of items) {
+                await tx.cart_items.create({
+                    data: {
+                        id: item.id,
+                        cart_id: cartId.toString(),
+                        product_id: item.product_id,
+                        quantity: item.quantity,
+                        price: item.price,
+                    }
+                })
+            }
         }
     }
 
     private async deleteCartItems(tx: Prisma.TransactionClient, ids: string[]): Promise<void> {
-        if (!ids.length) {
-            return;
-        }
-
-        await tx.cart_items.deleteMany({    
-            where: {
-                id: { in: ids }
-            }
-        })
-    }
-
-    private async updateCartItems(tx: Prisma.TransactionClient, items: CartItemRow[]) {
-        if (items.length <= 0) {
-            return;
-        }
-
-        for (const item of items) {
-            await tx.cart_items.update({
-                where: { id: item.id },
-                data: {
-                    quantity: item.quantity,
-                    price: item.price,
+        if (ids.length > 0) {
+            await tx.cart_items.deleteMany({    
+                where: {
+                    id: {
+                        in: ids
+                    }
                 }
             })
         }
     }
 
-
-    private mergeItemIds(existingCart: Cart, updatedCart: Cart): Set<string> {
-        return new Set([...existingCart.getItems().keys(), ...updatedCart.getItems().keys()])
+    private async updateCartItems(tx: Prisma.TransactionClient, items: CartItemRow[]) {
+        if (items.length > 0) {
+            for (const item of items) {
+                await tx.cart_items.update({
+                    where: { id: item.id },
+                    data: {
+                        quantity: item.quantity,
+                        price: item.price,
+                    }
+                })
+            }
+        }
     }
 
     private computeChanges(existingCart: Cart, updatedCart: Cart): {
@@ -150,7 +145,7 @@ export default class CartRepository implements ICartRepository<Prisma.Transactio
                 itemsToAdd.push(
                     this.mapper.itemToPersistence(productId, incomingItem)
                 )
-            } else if (existingItem && incomingItem && existingItem.getQuantity() !== incomingItem.getQuantity()) {
+            } else if (existingItem && incomingItem) {
                 itemsToUpdate.push(
                     this.mapper.itemToPersistence(productId, incomingItem)
                 );

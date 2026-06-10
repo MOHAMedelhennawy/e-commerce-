@@ -2,6 +2,7 @@ import ID from "../../../../shared/domain/value-object/Id-object";
 import Cart from "../../domain/entities/cart";
 import ERROR from "../../../../shared/domain/errors/error.messages";
 import { InsufficientStockError, NotFoundError } from "../../../../shared/domain/errors/domain.errors";
+import type IProductRepository from "../../../product/domain/repositories/product-repository-interface"
 import type CartItemInputDTO from "../dtos/cart.item.input.dto"
 import type ICartRepository from "../../domain/repository/cart.repository.interface";
 import type IApplicationMapper from "../../../../shared/application/interfaces/application.mapper.interface";
@@ -19,12 +20,12 @@ export default class AddItemToCartUseCase {
         const userId = ID.create(dto.user_id);
         const productId = ID.create(dto.product_id);
         const product = await this.productRepository.findUnique(productId);
-
+    
         if (!product) {
             throw new NotFoundError(ERROR.NOT_FOUND("Product", dto.product_id));
         }
 
-        if (!product.isAvailable()) {
+        if (!product.getStock().isAvialable()) {
             throw new InsufficientStockError(ERROR.PRODUCT.OUT_OF_STOCK);
         }
 
@@ -33,8 +34,12 @@ export default class AddItemToCartUseCase {
 
         cart.addItem(productId, product.getPrice());
 
-        await this.cartRepository.save(cart);
+        const userCart = existingCart ?? Cart.create(dto.user_id);
 
-        return this.mapper.toDTO(cart);
+        userCart.addItem(productId, product.getPrice());
+
+        await this.cartRepository.saveChanges(userCart, existingCart);
+
+        return this.mapper.toDTO(userCart);
     }
 }
