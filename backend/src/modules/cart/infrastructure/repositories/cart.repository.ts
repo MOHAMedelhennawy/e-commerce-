@@ -52,12 +52,27 @@ export default class CartRepository implements ICartRepository<Prisma.Transactio
 
     private async createCart(tx: Prisma.TransactionClient, cart: Cart): Promise<void> {
         const data = this.mapper.toPersistence(cart);
+        // Use upsert instead of create to handle race condition:
+        // two concurrent requests may both see existingCart = null
+        // and attempt to create the same cart simultaneously.
+        // upsert resolves the conflict atomically at the DB level.
 
-        await tx.carts.create({
-            data: {
-                ...data,
+        await tx.carts.upsert({
+            where: { user_id: cart.getUserId().toString() },
+            create: {
+                id: cart.getId().toString(),
+                user_id: cart.getUserId().toString(),
                 cart_items: {
                     createMany: { data: data.cart_items }
+                }
+            },
+            update: {
+                cart_items: {
+                    createMany: { data: data.cart_items },
+                    // skipDuplicates: if two concurrent requests both see existingCart = null,
+                    // the second request will hit the update branch after the first creates the cart.
+                    // The item may already exist, so we skip it silently instead of throwing a conflict error.
+                    // skipDuplicates: true
                 }
             }
         })
@@ -125,7 +140,7 @@ export default class CartRepository implements ICartRepository<Prisma.Transactio
             const incomingItem = updatedCart.getItem(productId);
 
             if (existingItem && !incomingItem) {
-                removedItemIds.push(id)
+                removedItemIds.push(existingItem.getId().toString())
             } else if (!existingItem && incomingItem) {
                 itemsToAdd.push(
                     this.mapper.itemToPersistence(productId, incomingItem)

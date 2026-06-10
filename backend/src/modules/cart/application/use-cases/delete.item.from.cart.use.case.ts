@@ -17,18 +17,10 @@ export default class DeleteItemUseCase {
         const productId = ID.create(dto.product_id);
         const userId = ID.create(dto.user_id);
 
-        const existingCart = await this.cartRepository.getCartWithItems(userId);
-        if (!existingCart) {
-            throw new Error(ERROR.CART.NOT_FOUND)
-        }
+        if (!existingCart) throw new NotFoundError(ERROR.CART.NOT_FOUND)
 
-        console.log(existingCart);
-        const updatedCart = existingCart.clone();
-        updatedCart.removeItem(productId);
-        console.log(updatedCart);
-
-        await this.cartRepository.saveChanges(updatedCart, existingCart);
-
-        return this.mapper.toDTO(updatedCart);
+        existingCart.removeItem(productId);
+        await this.cartRepository.save(existingCart);
+        return this.mapper.toDTO(existingCart);
     }
 }

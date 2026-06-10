@@ -17,6 +17,7 @@ export default class AddItemToCartUseCase {
     ) {}
 
     async execute(dto: CartItemInputDTO): Promise<CartItemResponseDTO> {
+        const userId = ID.create(dto.user_id);
         const productId = ID.create(dto.product_id);
         const product = await this.productRepository.findUnique(productId);
     
@@ -28,8 +29,10 @@ export default class AddItemToCartUseCase {
             throw new InsufficientStockError(ERROR.PRODUCT.OUT_OF_STOCK);
         }
 
-        const userId = ID.create(dto.user_id);
         const existingCart = await this.cartRepository.getCartWithItems(userId);
+        const cart = existingCart ?? Cart.create(dto.user_id);
+
+        cart.addItem(productId, product.getPrice());
 
         const userCart = existingCart ?? Cart.create(dto.user_id);
 
