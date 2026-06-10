@@ -19,14 +19,10 @@ export default class DeleteItemUseCase {
         const userId = ID.create(dto.user_id);
         const existingCart = await this.cartRepository.getCartWithItems(userId);
 
-        if (!existingCart) {
-            throw new NotFoundError(ERROR.CART.NOT_FOUND)
-        }
+        if (!existingCart) throw new NotFoundError(ERROR.CART.NOT_FOUND)
 
         existingCart.removeItem(productId);
-
         await this.cartRepository.save(existingCart);
-
         return this.mapper.toDTO(existingCart);
     }
 }

@@ -16,8 +16,8 @@ export default class Cart extends Auditable {
         this.items = items
     }
 
-    has(id: string): boolean {
-        return this.items.has(id);
+    has(id: ID): boolean {
+        return this.items.has(id.toString());
     }
 
     getUserId(): ID {
@@ -50,8 +50,10 @@ export default class Cart extends Auditable {
         }
 
         if (item.getQuantity() === 1) {
+            console.log("Item is deleted");
             this.items.delete(key);
         } else {
+            console.log("Item is decreased");
             item.decreaseQuantity();
         }
 
